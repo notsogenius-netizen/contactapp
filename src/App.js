@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import Header from "./Component/Header";
 import ContactList from "./Component/ContactList";
+import ContactDetail from './Component/ContactDetail';
 import { getContacts, saveContact, udpatePhoto  } from "./api/ContactService";
 import { Navigate, Route, Routes } from "react-router-dom";
 
@@ -59,6 +60,23 @@ function App() {
     }
   };
 
+  const updateContact = async (contact) => {
+    try {
+      const { data } = await saveContact(contact);
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const updateImage = async (formData) => {
+    try {
+      const { data: photoUrl } = await udpatePhoto(formData);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const toggleModal = show => show ? modalRef.current.showModal() : modalRef.current.close();
 
   useEffect(() => {
@@ -82,6 +100,7 @@ function App() {
                 />
               }
             />
+            <Route path="/contacts/:id" element={<ContactDetail updateContact={updateContact} updateImage={updateImage} />} />
           </Routes>
         </div>
       </main>
