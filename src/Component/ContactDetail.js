@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams  } from 'react-router-dom';
 import { getContact } from '../api/ContactService';
-
-const ContactDetail = ({ updateContact, updateImage }) => {
+import axios from 'axios';
+const ContactDetail = ({ updateContact, updateImage, getAllContacts }) => {
+    
     const inputRef = useRef();
+    const history = useNavigate();
     const [contact, setContact] = useState({
         id: '',
         name: '',
@@ -53,6 +55,13 @@ const ContactDetail = ({ updateContact, updateImage }) => {
         fetchContact(id);
     };
 
+    const handleDelete = async(id) => {
+        const response = await axios.delete(`http://localhost:8080/contacts/${id}`);
+        history('/contacts');
+        getAllContacts();
+    };
+
+
     useEffect(() => {
         fetchContact(id);
     }, []);
@@ -101,6 +110,7 @@ const ContactDetail = ({ updateContact, updateImage }) => {
                             </div>
                             <div className="form_footer">
                                 <button type="submit" className="btn">Save</button>
+                                <button type="submit" onClick={() => handleDelete(contact.id)} className="btn btn-danger">Delete</button>
                             </div>
                     </form>
                 </div>
