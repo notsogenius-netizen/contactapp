@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate, useParams  } from 'react-router-dom';
 import { getContact } from '../api/ContactService';
 import axios from 'axios';
-const ContactDetail = ({ updateContact, updateImage, getAllContacts }) => {
+const ContactDetail = ({ updateContact, updateImage, onDelete }) => {
     
     const inputRef = useRef();
     const history = useNavigate();
@@ -56,9 +56,7 @@ const ContactDetail = ({ updateContact, updateImage, getAllContacts }) => {
     };
 
     const handleDelete = async(id) => {
-        const response = await axios.delete(`http://localhost:8080/contacts/${id}`);
-        history('/contacts');
-        getAllContacts();
+        await onDelete(id);
     };
 
 

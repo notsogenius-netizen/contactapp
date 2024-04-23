@@ -3,11 +3,12 @@ import Header from "./Component/Header";
 import ContactList from "./Component/ContactList";
 import ContactDetail from "./Component/ContactDetail";
 import { deleteContact, getContacts, saveContact, udpatePhoto } from "./api/ContactService";
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes, useNavigate } from "react-router-dom";
 
 function App() {
   const modalRef = useRef();
   const fileRef = useRef();
+  const navigate = useNavigate();
   const [data, setData] = useState({});
   const [currentPage, setCurrentPage] = useState(0);
   const [file, setFile] = useState(undefined);
@@ -20,7 +21,7 @@ function App() {
     status: "",
   });
 
-  const getAllContacts = async (page = 0, size = 10) => {
+  const getAllContacts = async (page = 0, size = 8) => {
     try {
       setCurrentPage(page);
       const { data } = await getContacts(page, size);
@@ -77,6 +78,21 @@ function App() {
     }
   };
 
+  const onDelete = async (id) => {
+    navigate("./contacts");
+    const response = await deleteContact(id);
+    setValues({
+      name: "",
+      email: "",
+      phone: "",
+      address: "",
+      title: "",
+      status: "",
+    });
+    getAllContacts();
+    console.log(response.data);
+  };
+
   const toggleModal = (show) =>
     show ? modalRef.current.showModal() : modalRef.current.close();
 
@@ -107,7 +123,7 @@ function App() {
                 <ContactDetail
                   updateContact={updateContact}
                   updateImage={updateImage}
-                  getAllContacts={getAllContacts}
+                  onDelete={onDelete}
                 />
               }
             />
